@@ -32,3 +32,5 @@ C:\Users\thejo\OneDrive\Desktop\esp32-indoor-localization\esp32-indoor-localizat
 C:\Users\thejo\OneDrive\Desktop\esp32-indoor-localization\esp32-indoor-localization\obj\Debug\esp32-indoor-localization.csproj.CopyComplete
 C:\Users\thejo\OneDrive\Desktop\esp32-indoor-localization\esp32-indoor-localization\obj\Debug\esp32-indoor-localization.exe
 C:\Users\thejo\OneDrive\Desktop\esp32-indoor-localization\esp32-indoor-localization\obj\Debug\esp32-indoor-localization.pdb
+C:\Users\thejo\OneDrive\Documents\GitHub\esp32_indoor_localization_2.0\esp32-indoor-localization\obj\Debug\esp32-indoor-localization.exe
+C:\Users\thejo\OneDrive\Documents\GitHub\esp32_indoor_localization_2.0\esp32-indoor-localization\obj\Debug\esp32-indoor-localization.pdb
