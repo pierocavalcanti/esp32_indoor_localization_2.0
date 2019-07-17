@@ -238,6 +238,10 @@ namespace esp32_indoor_localization
             return this.trackBar_periodMap.Value;
         }
 
+        private void Label4_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
 }
