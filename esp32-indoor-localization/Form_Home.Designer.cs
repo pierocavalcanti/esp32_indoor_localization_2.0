@@ -32,17 +32,18 @@ namespace esp32_indoor_localization
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage_mapView = new System.Windows.Forms.TabPage();
             this.label3 = new System.Windows.Forms.Label();
             this.chart_Map = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPage_DevicePer5min = new System.Windows.Forms.TabPage();
+            this.label4 = new System.Windows.Forms.Label();
             this.chart_macOccurenciesPerPeriod = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPage_LongTermStatistics = new System.Windows.Forms.TabPage();
             this.listView1 = new System.Windows.Forms.ListView();
@@ -52,7 +53,6 @@ namespace esp32_indoor_localization
             this.dateTimePicker1_from = new System.Windows.Forms.DateTimePicker();
             this.dateTimePicker_to = new System.Windows.Forms.DateTimePicker();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.label4 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage_mapView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart_Map)).BeginInit();
@@ -99,17 +99,17 @@ namespace esp32_indoor_localization
             // 
             // chart_Map
             // 
-            chartArea4.Name = "ChartArea1";
-            this.chart_Map.ChartAreas.Add(chartArea4);
-            legend4.Name = "Legend1";
-            this.chart_Map.Legends.Add(legend4);
+            chartArea1.Name = "ChartArea1";
+            this.chart_Map.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart_Map.Legends.Add(legend1);
             this.chart_Map.Location = new System.Drawing.Point(3, 4);
             this.chart_Map.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chart_Map.Name = "chart_Map";
-            series4.ChartArea = "ChartArea1";
-            series4.Legend = "Legend1";
-            series4.Name = "Series1";
-            this.chart_Map.Series.Add(series4);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chart_Map.Series.Add(series1);
             this.chart_Map.Size = new System.Drawing.Size(1055, 575);
             this.chart_Map.TabIndex = 0;
             this.chart_Map.Text = "chart1";
@@ -126,20 +126,31 @@ namespace esp32_indoor_localization
             this.tabPage_DevicePer5min.TabIndex = 2;
             this.tabPage_DevicePer5min.Text = "Device per min Statistics";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.BackColor = System.Drawing.Color.Chartreuse;
+            this.label4.Location = new System.Drawing.Point(3, 615);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(51, 20);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "label4";
+            this.label4.Click += new System.EventHandler(this.Label4_Click);
+            // 
             // chart_macOccurenciesPerPeriod
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chart_macOccurenciesPerPeriod.ChartAreas.Add(chartArea3);
-            legend3.Name = "Legend1";
-            this.chart_macOccurenciesPerPeriod.Legends.Add(legend3);
+            chartArea2.Name = "ChartArea1";
+            this.chart_macOccurenciesPerPeriod.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chart_macOccurenciesPerPeriod.Legends.Add(legend2);
             this.chart_macOccurenciesPerPeriod.Location = new System.Drawing.Point(0, 4);
             this.chart_macOccurenciesPerPeriod.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chart_macOccurenciesPerPeriod.Name = "chart_macOccurenciesPerPeriod";
-            series3.ChartArea = "ChartArea1";
-            series3.Legend = "Legend1";
-            series3.Name = "Series1";
-            this.chart_macOccurenciesPerPeriod.Series.Add(series3);
-            this.chart_macOccurenciesPerPeriod.Size = new System.Drawing.Size(1058, 588);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.chart_macOccurenciesPerPeriod.Series.Add(series2);
+            this.chart_macOccurenciesPerPeriod.Size = new System.Drawing.Size(1055, 575);
             this.chart_macOccurenciesPerPeriod.TabIndex = 1;
             this.chart_macOccurenciesPerPeriod.Text = "chart2";
             // 
@@ -223,17 +234,6 @@ namespace esp32_indoor_localization
             this.timer.Enabled = true;
             this.timer.Interval = 10000;
             this.timer.Tick += new System.EventHandler(this.Timer_Tick);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.BackColor = System.Drawing.Color.Chartreuse;
-            this.label4.Location = new System.Drawing.Point(3, 615);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(51, 20);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "label4";
-            this.label4.Click += new System.EventHandler(this.Label4_Click);
             // 
             // Form_Home
             // 
