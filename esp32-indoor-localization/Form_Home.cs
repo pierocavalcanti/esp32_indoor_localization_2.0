@@ -211,7 +211,7 @@ namespace esp32_indoor_localization
             Int32 timestamp_from = unixTimestamp - 60;
             label3.Text = "Ultimo aggiornamento" + unixTimestamp;
             Debug.WriteLine(this.getTrackBarValue().ToString() + "           " + unixTimestamp);
-            devices = positionHandler.GetPositions(timestamp_from);
+            devices = positionHandler.GetPositions(timestamp_from,0.30).Result; //bloccante
             //  GenerateGraph() disegna il chart della mappa con i dispositivi
 
             this.GenerateGraph();
@@ -227,7 +227,7 @@ namespace esp32_indoor_localization
             //Int32 currentDate = (Int32) new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
             Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             timestamp_from = unixTimestamp - timestamp_from;
-            devices = positionHandler.GetPositions(timestamp_from);
+            devices = positionHandler.GetPositions(timestamp_from,0.30).Result;
             //  GenerateGraph() disegna il chart della mappa con i dispositivi
             this.GenerateGraph();
 

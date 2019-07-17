@@ -22,8 +22,19 @@ namespace esp32_indoor_localization
            return 0.070871 * Math.Exp(0.062578 * - RSSI);
         }
 
+        public async Task<List<DevicePosition>> GetPositions(Int32 timestamp_from, double threshold)
+        {
+            // esegue le funzioni in un altro thread 
+            var standarPositionsTask = Task.Run(() => EstimateNotHiddenPositions(timestamp_from));
+            var hiddenPositionsTask = Task.Run(() => EstimateHiddenPositions(timestamp_from,threshold));
 
-        public List<DevicePosition> GetPositions(Int32 timestamp_from)
+            var listStandardPositions = await standarPositionsTask;
+            var listHiddenPositions = await hiddenPositionsTask;
+            
+            return listStandardPositions.Concat(listHiddenPositions).ToList(); 
+        }
+
+        private List<DevicePosition> EstimateNotHiddenPositions(Int32 timestamp_from)
         {
             
             List<DevicePosition> positions  = null;
@@ -105,7 +116,7 @@ namespace esp32_indoor_localization
         }
 
         
-        public List<DevicePosition>  RevealHiddenPositions(Int32 timestamp_from, double threshold)
+        private List<DevicePosition>  EstimateHiddenPositions(Int32 timestamp_from, double threshold)
         {
 
             List<DevicePosition> hiddenPositions = null;
