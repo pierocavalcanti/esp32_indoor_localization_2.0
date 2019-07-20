@@ -143,6 +143,7 @@ namespace esp32_indoor_localization
             this.chart_macOccurenciesPerPeriod.ChartAreas.Add(chartArea2);
             legend2.Name = "Legend1";
             this.chart_macOccurenciesPerPeriod.Legends.Add(legend2);
+            this.chart_macOccurenciesPerPeriod.Location = new System.Drawing.Point(7, 0);
             this.chart_macOccurenciesPerPeriod.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chart_macOccurenciesPerPeriod.Name = "chart_macOccurenciesPerPeriod";
             series2.ChartArea = "ChartArea1";
@@ -238,6 +239,7 @@ namespace esp32_indoor_localization
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1359, 677);
             this.Controls.Add(this.tabControl1);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "Form_Home";
