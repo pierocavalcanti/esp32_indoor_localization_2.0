@@ -66,11 +66,11 @@ namespace esp32_indoor_localization
             this.tabControl1.Controls.Add(this.tabPage_mapView);
             this.tabControl1.Controls.Add(this.tabPage_DevicePer5min);
             this.tabControl1.Controls.Add(this.tabPage_LongTermStatistics);
-            this.tabControl1.Location = new System.Drawing.Point(8, 4);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tabControl1.Location = new System.Drawing.Point(14, 6);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1336, 685);
+            this.tabControl1.Size = new System.Drawing.Size(2375, 1062);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage_mapView
@@ -78,11 +78,11 @@ namespace esp32_indoor_localization
             this.tabPage_mapView.BackColor = System.Drawing.Color.WhiteSmoke;
             this.tabPage_mapView.Controls.Add(this.label3);
             this.tabPage_mapView.Controls.Add(this.chart_Map);
-            this.tabPage_mapView.Location = new System.Drawing.Point(4, 29);
-            this.tabPage_mapView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tabPage_mapView.Location = new System.Drawing.Point(10, 48);
+            this.tabPage_mapView.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.tabPage_mapView.Name = "tabPage_mapView";
-            this.tabPage_mapView.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabPage_mapView.Size = new System.Drawing.Size(1328, 652);
+            this.tabPage_mapView.Padding = new System.Windows.Forms.Padding(5, 6, 5, 6);
+            this.tabPage_mapView.Size = new System.Drawing.Size(2355, 1004);
             this.tabPage_mapView.TabIndex = 0;
             this.tabPage_mapView.Text = "Map";
             // 
@@ -90,10 +90,10 @@ namespace esp32_indoor_localization
             // 
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.GreenYellow;
-            this.label3.Location = new System.Drawing.Point(5, 605);
-            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label3.Location = new System.Drawing.Point(9, 938);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(51, 20);
+            this.label3.Size = new System.Drawing.Size(93, 32);
             this.label3.TabIndex = 2;
             this.label3.Text = "label3";
             // 
@@ -103,26 +103,27 @@ namespace esp32_indoor_localization
             this.chart_Map.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             this.chart_Map.Legends.Add(legend1);
-            this.chart_Map.Location = new System.Drawing.Point(3, 4);
-            this.chart_Map.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.chart_Map.Location = new System.Drawing.Point(5, 6);
+            this.chart_Map.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.chart_Map.Name = "chart_Map";
             series1.ChartArea = "ChartArea1";
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chart_Map.Series.Add(series1);
-            this.chart_Map.Size = new System.Drawing.Size(1055, 575);
+            this.chart_Map.Size = new System.Drawing.Size(1876, 891);
             this.chart_Map.TabIndex = 0;
             this.chart_Map.Text = "chart1";
+            this.chart_Map.Click += new System.EventHandler(this.Chart_Map_Click);
             // 
             // tabPage_DevicePer5min
             // 
             this.tabPage_DevicePer5min.BackColor = System.Drawing.Color.WhiteSmoke;
             this.tabPage_DevicePer5min.Controls.Add(this.label4);
             this.tabPage_DevicePer5min.Controls.Add(this.chart_macOccurenciesPerPeriod);
-            this.tabPage_DevicePer5min.Location = new System.Drawing.Point(4, 29);
-            this.tabPage_DevicePer5min.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tabPage_DevicePer5min.Location = new System.Drawing.Point(10, 48);
+            this.tabPage_DevicePer5min.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.tabPage_DevicePer5min.Name = "tabPage_DevicePer5min";
-            this.tabPage_DevicePer5min.Size = new System.Drawing.Size(1328, 652);
+            this.tabPage_DevicePer5min.Size = new System.Drawing.Size(2355, 1004);
             this.tabPage_DevicePer5min.TabIndex = 2;
             this.tabPage_DevicePer5min.Text = "Device per min Statistics";
             // 
@@ -130,9 +131,10 @@ namespace esp32_indoor_localization
             // 
             this.label4.AutoSize = true;
             this.label4.BackColor = System.Drawing.Color.Chartreuse;
-            this.label4.Location = new System.Drawing.Point(3, 615);
+            this.label4.Location = new System.Drawing.Point(5, 953);
+            this.label4.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(51, 20);
+            this.label4.Size = new System.Drawing.Size(93, 32);
             this.label4.TabIndex = 2;
             this.label4.Text = "label4";
             this.label4.Click += new System.EventHandler(this.Label4_Click);
@@ -143,14 +145,14 @@ namespace esp32_indoor_localization
             this.chart_macOccurenciesPerPeriod.ChartAreas.Add(chartArea2);
             legend2.Name = "Legend1";
             this.chart_macOccurenciesPerPeriod.Legends.Add(legend2);
-            this.chart_macOccurenciesPerPeriod.Location = new System.Drawing.Point(0, 4);
-            this.chart_macOccurenciesPerPeriod.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.chart_macOccurenciesPerPeriod.Location = new System.Drawing.Point(0, 6);
+            this.chart_macOccurenciesPerPeriod.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.chart_macOccurenciesPerPeriod.Name = "chart_macOccurenciesPerPeriod";
             series2.ChartArea = "ChartArea1";
             series2.Legend = "Legend1";
             series2.Name = "Series1";
             this.chart_macOccurenciesPerPeriod.Series.Add(series2);
-            this.chart_macOccurenciesPerPeriod.Size = new System.Drawing.Size(1055, 575);
+            this.chart_macOccurenciesPerPeriod.Size = new System.Drawing.Size(1876, 891);
             this.chart_macOccurenciesPerPeriod.TabIndex = 1;
             this.chart_macOccurenciesPerPeriod.Text = "chart2";
             // 
@@ -163,49 +165,51 @@ namespace esp32_indoor_localization
             this.tabPage_LongTermStatistics.Controls.Add(this.button_computeMacPerPeriod);
             this.tabPage_LongTermStatistics.Controls.Add(this.dateTimePicker1_from);
             this.tabPage_LongTermStatistics.Controls.Add(this.dateTimePicker_to);
-            this.tabPage_LongTermStatistics.Location = new System.Drawing.Point(4, 29);
-            this.tabPage_LongTermStatistics.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tabPage_LongTermStatistics.Location = new System.Drawing.Point(10, 48);
+            this.tabPage_LongTermStatistics.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.tabPage_LongTermStatistics.Name = "tabPage_LongTermStatistics";
-            this.tabPage_LongTermStatistics.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabPage_LongTermStatistics.Size = new System.Drawing.Size(1328, 652);
+            this.tabPage_LongTermStatistics.Padding = new System.Windows.Forms.Padding(5, 6, 5, 6);
+            this.tabPage_LongTermStatistics.Size = new System.Drawing.Size(2355, 1004);
             this.tabPage_LongTermStatistics.TabIndex = 1;
             this.tabPage_LongTermStatistics.Text = "LongTermStatistics";
             // 
             // listView1
             // 
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(65, 39);
-            this.listView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.listView1.Location = new System.Drawing.Point(116, 60);
+            this.listView1.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(826, 547);
+            this.listView1.Size = new System.Drawing.Size(1465, 846);
             this.listView1.TabIndex = 6;
             this.listView1.UseCompatibleStateImageBehavior = false;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(980, 186);
+            this.label2.Location = new System.Drawing.Point(1742, 288);
+            this.label2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(27, 20);
+            this.label2.Size = new System.Drawing.Size(48, 32);
             this.label2.TabIndex = 5;
             this.label2.Text = "To";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(980, 94);
+            this.label1.Location = new System.Drawing.Point(1742, 146);
+            this.label1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(46, 20);
+            this.label1.Size = new System.Drawing.Size(80, 32);
             this.label1.TabIndex = 4;
             this.label1.Text = "From";
             this.label1.Click += new System.EventHandler(this.Label1_Click);
             // 
             // button_computeMacPerPeriod
             // 
-            this.button_computeMacPerPeriod.Location = new System.Drawing.Point(1029, 309);
-            this.button_computeMacPerPeriod.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.button_computeMacPerPeriod.Location = new System.Drawing.Point(1829, 479);
+            this.button_computeMacPerPeriod.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.button_computeMacPerPeriod.Name = "button_computeMacPerPeriod";
-            this.button_computeMacPerPeriod.Size = new System.Drawing.Size(138, 105);
+            this.button_computeMacPerPeriod.Size = new System.Drawing.Size(245, 163);
             this.button_computeMacPerPeriod.TabIndex = 3;
             this.button_computeMacPerPeriod.Text = "Compute";
             this.button_computeMacPerPeriod.UseVisualStyleBackColor = true;
@@ -213,19 +217,19 @@ namespace esp32_indoor_localization
             // 
             // dateTimePicker1_from
             // 
-            this.dateTimePicker1_from.Location = new System.Drawing.Point(983, 119);
-            this.dateTimePicker1_from.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.dateTimePicker1_from.Location = new System.Drawing.Point(1748, 184);
+            this.dateTimePicker1_from.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.dateTimePicker1_from.Name = "dateTimePicker1_from";
-            this.dateTimePicker1_from.Size = new System.Drawing.Size(224, 26);
+            this.dateTimePicker1_from.Size = new System.Drawing.Size(395, 38);
             this.dateTimePicker1_from.TabIndex = 2;
             this.dateTimePicker1_from.Value = new System.DateTime(2019, 7, 14, 19, 59, 17, 538);
             // 
             // dateTimePicker_to
             // 
-            this.dateTimePicker_to.Location = new System.Drawing.Point(983, 211);
-            this.dateTimePicker_to.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.dateTimePicker_to.Location = new System.Drawing.Point(1748, 327);
+            this.dateTimePicker_to.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.dateTimePicker_to.Name = "dateTimePicker_to";
-            this.dateTimePicker_to.Size = new System.Drawing.Size(224, 26);
+            this.dateTimePicker_to.Size = new System.Drawing.Size(395, 38);
             this.dateTimePicker_to.TabIndex = 1;
             this.dateTimePicker_to.Value = new System.DateTime(2019, 7, 14, 19, 59, 17, 540);
             // 
@@ -237,11 +241,11 @@ namespace esp32_indoor_localization
             // 
             // Form_Home
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1082, 677);
+            this.ClientSize = new System.Drawing.Size(1924, 1049);
             this.Controls.Add(this.tabControl1);
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.Name = "Form_Home";
             this.Text = "Indoor Localization System";
             this.Load += new System.EventHandler(this.Form_Home_Load);

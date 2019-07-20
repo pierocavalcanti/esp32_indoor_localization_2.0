@@ -242,6 +242,11 @@ namespace esp32_indoor_localization
         {
 
         }
+
+        private void Chart_Map_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
 }
