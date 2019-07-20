@@ -29,7 +29,6 @@ namespace esp32_indoor_localization
          List<DevicePosition> devices;
          PositionHandler positionHandler;
 
-        private const string IP_ADDRESS_SERVER = "http://192.168.1.16:3000/";
         private static string IP_ADDRESS_SERVER = "http://192.168.1.16:3000/";
         public Form_Home()
         {
@@ -125,6 +124,39 @@ namespace esp32_indoor_localization
 
         private void Button1_Click_1(object sender, EventArgs e)
         {
+            //When click on this button, Compute the LongTermStatistics
+            DateTime from = dateTimePicker1_from.Value;
+            DateTime to = dateTimePicker_to.Value;
+
+            double from_timestamp = DateTimeToUnixTimestamp(from);
+            double to_timestamp = DateTimeToUnixTimestamp(to);
+
+            ///////QUERY che ritorna una lista di item: [mac,#occorrenze,prima_volta,ultima_volta]
+
+
+
+            
+            var dt = new DataTable();
+            dt.Columns.Add("Mac");
+            dt.Columns.Add("Occurrencies");
+            dt.Columns.Add("FirstlySeen");
+            dt.Columns.Add("LastlySeen");
+
+            //foreach(element in lista_ritornata_da_query)
+            for (int i = 0; i < 10; i++) {
+            dt.Rows.Add("MAC1", "22", from.ToString(), to.ToString());
+            dt.Rows.Add("MAC2", "24", "primavolta2", "secondavolta2");
+
+            } 
+
+            dataGridView_Statistics.DataSource = dt;
+            
+
+
+
+
+            //conversion in UnixTimeStamp 
+
 
         }
 
@@ -138,16 +170,15 @@ namespace esp32_indoor_localization
             GenerateGraph();
 
             // COMMENTARE BLOCCO QUANDO NON CONNESSO!!
-            Thread server = new Thread(new ThreadStart(AsyncServer));
+            /*Thread server = new Thread(new ThreadStart(AsyncServer));
             server.Start();
 
-            Debug.WriteLine(server.IsAlive);
+            Debug.WriteLine(server.IsAlive);*/
             //Timer che ricarica chart_Map ogni minuto
 
 
             //t.Start();
         }
-
 
 
         //GenerateGraph():: create the INITIAL structure of the chart, and then with PlotGraph, it is filled up with the values.
@@ -167,6 +198,7 @@ namespace esp32_indoor_localization
             ss.ChartArea = "ChartArea1";
             ss.ChartType = SeriesChartType.Point;
             ss.Legend = "Legend1";
+            chart_Map.Legends.Clear();
             ss.XValueType = ChartValueType.Double;
             ss.YValueType = ChartValueType.Double;
             chart_Map.ChartAreas[0].BackColor = Color.WhiteSmoke;
@@ -205,8 +237,19 @@ namespace esp32_indoor_localization
                 dp1.Label = "ESP32 "+o.id;
                 ss.Points.Add(dp1);
             });
-            
-            if(devices != null)
+
+            if (devices != null)
+            {
+                devices.ForEach(o =>
+                {
+
+                    DataPoint dp1 = new DataPoint();
+                    dp1.SetValueXY(o.X, o.Y);
+                    dp1.Font = new Font("Arial", 10, FontStyle.Bold);
+                    dp1.Label = o.Mac;
+                    ss.Points.Add(dp1);
+                });
+            }
 
             chart_Map.Invalidate();
 
@@ -233,6 +276,7 @@ namespace esp32_indoor_localization
             {
                 devices.ForEach(o =>
                 {
+
                     DataPoint dp1 = new DataPoint();
                     dp1.SetValueXY(o.X, o.Y);
                     dp1.Font = new Font("Arial", 10, FontStyle.Bold);
@@ -241,9 +285,10 @@ namespace esp32_indoor_localization
                 });
             }
 
-            log.Info("numero device trovati: " + devices.Count);
-
             chart_Map.Invalidate();
+
+            //log.Info("numero device trovati: " + devices.Count);
+
 
         }
 
@@ -257,15 +302,22 @@ namespace esp32_indoor_localization
             Int32 unixTimeStamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             Int32 timestamp_from = unixTimeStamp - 60;
             var current_hdate = UnixTimeStampToDateTime(unixTimeStamp);
-            label3.Text = "Ultimo aggiornamento" + current_hdate.ToShortDateString();
+            label3.Text = "Ultimo aggiornamento " + current_hdate.ToString();
+            label4.Text = "Ultimo aggiornamento " + current_hdate.ToString();
             //Debug.WriteLine(this.getTrackBarValue().ToString() + "           " + unixTimestamp);
-            devices = positionHandler.GetPositions(timestamp_from,0.30).Result; //bloccante
-            //  GenerateGraph() disegna il chart della mappa con i dispositivi
+
+
+            //decommentare
+            //devices = positionHandler.GetPositions(timestamp_from,0.30).Result; //bloccante
+
+
+
             Debug.WriteLine("boooooboboooobo");
             //  PlotGraph() plotta i devices sulla mappa
 
+            this.GenerateGraph();
 
-            log.Info("numero device trovati: " + devices.Count);
+            //log.Info("numero device trovati: " + devices.Count);
 
         }
 
@@ -300,6 +352,78 @@ namespace esp32_indoor_localization
             System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
             dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
             return dtDateTime;
+        }
+
+        public static double DateTimeToUnixTimestamp(DateTime dateTime)
+        {
+            return (TimeZoneInfo.ConvertTimeToUtc(dateTime) -
+                   new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc)).TotalSeconds;
+        }
+
+        private void Label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MoveRight_Click(object sender, EventArgs e)
+        {
+            int moveUnit = GetValueFromTimeUnit(); //il valore che va sommato al timestamp iniziale
+            Debug.WriteLine(moveUnit.ToString());
+        }
+
+        private int GetValueFromTimeUnit() {
+            string timeunit = comboBox_TimeUnit.Text;
+            int unit = 1;
+            switch (timeunit.ToLower()) {
+                case "seconds":
+                    //already aligned
+                    break;
+
+                case "minutes":
+                    unit *= 60;
+                    break;
+
+                case "hours":
+                    unit *= 60 * 60;
+                    break;
+
+                case "days":
+                    unit *= 60 * 60 * 24;
+                    break;
+
+                case "weeks":
+                    unit *= 60 * 60 * 24 * 7;
+                    break;
+
+                case "months":
+                    unit *= 60 * 60 * 24 * 30;
+                    break;
+
+                case "years":
+                    unit *= 60 * 60 * 24 * 365;
+                    break;
+
+
+                default:
+                    break;
+            }
+            return unit;
+        }
+
+        private void MoveLeft_Click(object sender, EventArgs e)
+        {
+            int moveUnit = GetValueFromTimeUnit(); //il valore che va sommato al timestamp iniziale
+            Debug.WriteLine(moveUnit.ToString());
+        }
+
+        private void Button4_Click(object sender, EventArgs e)
+        {
+            timepicker_map.Value = DateTime.UtcNow;
         }
     }
 

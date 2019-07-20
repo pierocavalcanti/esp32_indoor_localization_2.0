@@ -181,7 +181,6 @@ namespace esp32_indoor_localization
                     }
                 }
 
-                if(hiddenDevicePositions.Count()!=0)
                 if(hiddenDevicePositions!=null && hiddenDevicePositions.Count()!=0)
                 {
                     var positionCollection = db.GetCollection<DevicePosition>("positions");
