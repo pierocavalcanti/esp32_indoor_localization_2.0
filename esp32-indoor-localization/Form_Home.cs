@@ -210,7 +210,6 @@ namespace esp32_indoor_localization
             Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             Int32 timestamp_from = unixTimestamp - 60;
             label3.Text = "Ultimo aggiornamento" + unixTimestamp;
-            Debug.WriteLine(this.getTrackBarValue().ToString() + "           " + unixTimestamp);
             devices = positionHandler.GetPositions(timestamp_from,0.30).Result; //bloccante
             //  GenerateGraph() disegna il chart della mappa con i dispositivi
 
@@ -218,25 +217,7 @@ namespace esp32_indoor_localization
 
         }
 
-        private void TrackBar_periodMap_Scroll(object sender, EventArgs e)
-        {
-            //Funzione che richiama in ordine:
-            //  GetPosition() restituisce la List di DevicePosition aggiornata
             
-            Int32 timestamp_from = this.getTrackBarValue() * 60;
-            //Int32 currentDate = (Int32) new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
-            Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            timestamp_from = unixTimestamp - timestamp_from;
-            devices = positionHandler.GetPositions(timestamp_from,0.30).Result;
-            //  GenerateGraph() disegna il chart della mappa con i dispositivi
-            this.GenerateGraph();
-
-        }
-
-        public Int32 getTrackBarValue()
-        {
-            return this.trackBar_periodMap.Value;
-        }
 
         private void Label4_Click(object sender, EventArgs e)
         {
