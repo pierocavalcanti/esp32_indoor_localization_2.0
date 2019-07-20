@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+
 using System.Threading.Tasks;
 using LiteDB;
 using log4net;
@@ -22,21 +23,22 @@ namespace esp32_indoor_localization
            return 0.070871 * Math.Exp(0.062578 * - RSSI);
         }
 
-        public async Task<List<DevicePosition>> GetPositions(Int32 timestamp_from, double threshold)
+        
+        public async Task<List<DevicePosition>[]> GetPositions(Int32 timestamp_from, double threshold)
         {
-            // esegue le funzioni in un altro thread 
-            var standarPositionsTask = Task.Run(() => EstimateNotHiddenPositions(timestamp_from));
-            var hiddenPositionsTask = Task.Run(() => EstimateHiddenPositions(timestamp_from,threshold));
+            //eseguo due task: uno per trovare le posizioni standard e l'altro per trovare i mac nascosti
+            Task<List<DevicePosition>> mainTask = EstimateNotHiddenPositions(timestamp_from);
+            Task<List<DevicePosition>> hiddenTask = EstimateHiddenPositions(timestamp_from, threshold);
 
-            var listStandardPositions = await standarPositionsTask;
-            var listHiddenPositions = await hiddenPositionsTask;
-            
-            return listStandardPositions.Concat(listHiddenPositions).ToList(); 
+            List<DevicePosition>[] results = await Task.WhenAll(mainTask, hiddenTask);
+
+            return results;
         }
 
-        private List<DevicePosition> EstimateNotHiddenPositions(Int32 timestamp_from)
+
+        private async Task<List<DevicePosition>> EstimateNotHiddenPositions(Int32 timestamp_from)
         {
-            
+            Debug.WriteLine("not hidden");
             List<DevicePosition> positions  = null;
             
             using (var db = new LiteDatabase(@"MyData.db"))
@@ -108,17 +110,16 @@ namespace esp32_indoor_localization
                     colPositions.Insert(position);
                 }
             }
-
-
+                       
 
             return positions;
             
         }
 
         
-        private List<DevicePosition>  EstimateHiddenPositions(Int32 timestamp_from, double threshold)
+        private async Task<List<DevicePosition>>  EstimateHiddenPositions(Int32 timestamp_from, double threshold)
         {
-
+            
             List<DevicePosition> hiddenPositions = null;
 
             using (var db = new LiteDatabase(@"MyData.db"))
@@ -181,7 +182,7 @@ namespace esp32_indoor_localization
                     }
                 }
 
-                if(hiddenDevicePositions.Count()!=0)
+                
                 if(hiddenDevicePositions!=null && hiddenDevicePositions.Count()!=0)
                 {
                     var positionCollection = db.GetCollection<DevicePosition>("positions");
@@ -196,7 +197,8 @@ namespace esp32_indoor_localization
 
 
             }
-
+            
+          
             return null;
         }
 

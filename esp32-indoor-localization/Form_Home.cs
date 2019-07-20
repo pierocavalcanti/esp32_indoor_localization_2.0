@@ -30,7 +30,7 @@ namespace esp32_indoor_localization
          PositionHandler positionHandler;
 
         private const string IP_ADDRESS_SERVER = "http://192.168.1.16:3000/";
-        private static string IP_ADDRESS_SERVER = "http://192.168.1.16:3000/";
+       
         public Form_Home()
         {
             //Inizializza form
@@ -247,7 +247,7 @@ namespace esp32_indoor_localization
 
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private async void Timer_Tick(object sender, EventArgs e)
         {
             //Funzione che richiama in ordine:
             //  GetPosition() restituisce la List di DevicePosition aggiornata
@@ -259,13 +259,16 @@ namespace esp32_indoor_localization
             var current_hdate = UnixTimeStampToDateTime(unixTimeStamp);
             label3.Text = "Ultimo aggiornamento" + current_hdate.ToShortDateString();
             //Debug.WriteLine(this.getTrackBarValue().ToString() + "           " + unixTimestamp);
-            devices = positionHandler.GetPositions(timestamp_from,0.30).Result; //bloccante
+            
+            var devices = positionHandler.GetPositions(timestamp_from,0.30).Result; //devices è un array di List -> 1 elemento: standard - 2 elemento: hidden
+            
+            //devices = positionHandler.EstimateNotHiddenPositions(timestamp_from);
             //  GenerateGraph() disegna il chart della mappa con i dispositivi
             Debug.WriteLine("boooooboboooobo");
             //  PlotGraph() plotta i devices sulla mappa
+            
 
-
-            log.Info("numero device trovati: " + devices.Count);
+            log.Info("numero device trovati: " + devices[0].Count());
 
         }
 
@@ -300,6 +303,11 @@ namespace esp32_indoor_localization
             System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
             dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
             return dtDateTime;
+        }
+
+        private void Chart_Map_Click(object sender, EventArgs e)
+        {
+
         }
     }
 
