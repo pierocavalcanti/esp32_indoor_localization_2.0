@@ -28,6 +28,7 @@ namespace esp32_indoor_localization
          List<BoardLoader.Board> boards;
          List<DevicePosition> devices;
          PositionHandler positionHandler;
+         Series ss_occurrencies;
 
 
 
@@ -47,6 +48,24 @@ namespace esp32_indoor_localization
 
             positionHandler = new PositionHandler();
             fixSize();
+
+
+
+            //Fillup OccurrenciesChart
+
+            ss_occurrencies = new Series();
+            ss_occurrencies.ChartArea = "ChartArea1";
+            ss_occurrencies.ChartType = SeriesChartType.Area;
+            chart_macOccurenciesPerPeriod.Legends.Clear();
+            ss_occurrencies.XValueType = ChartValueType.Int32;
+            ss_occurrencies.YValueType = ChartValueType.Int32;
+            chart_macOccurenciesPerPeriod.ChartAreas[0].BackColor = Color.WhiteSmoke;
+            ss_occurrencies.Points.AddXY(0, 0);
+            ss_occurrencies.Points.AddXY(1, 1);
+            ss_occurrencies.Points.AddXY(2, 2);
+            chart_macOccurenciesPerPeriod.Series.Add(ss_occurrencies);
+            chart_macOccurenciesPerPeriod.Invalidate();
+            //
 
         }
 
@@ -230,7 +249,7 @@ namespace esp32_indoor_localization
             this.chart_Map.Series.Add(ss);
             this.chart_Map.Series[ss.Name].IsValueShownAsLabel = true;
 
-
+            int occurrencies = 0;
             boards.ForEach(o =>
             {
                 Debug.WriteLine("Device: " + o.id + " trovato");
@@ -251,12 +270,20 @@ namespace esp32_indoor_localization
                     dp1.Font = new Font("Arial", 10, FontStyle.Bold);
                     dp1.Label = o.Mac;
                     ss.Points.Add(dp1);
+                    occurrencies++;
                 });
             }
 
-            
+            if (occurrencies != 0)
+            {
+                DataPoint dp1 = new DataPoint();
+                dp1.SetValueXY(chart_macOccurenciesPerPeriod.Series[ss_occurrencies.Name].Points.Count()+1, occurrencies);
+                ss_occurrencies.Points.Add(dp1);
+            }
 
             chart_Map.Invalidate();
+            chart_macOccurenciesPerPeriod.Invalidate();
+
 
         }
 
@@ -317,9 +344,8 @@ namespace esp32_indoor_localization
             //  GenerateGraph() disegna il chart della mappa con i dispositivi
             Debug.WriteLine("boooooboboooobo");
             //  PlotGraph() plotta i devices sulla mappa
-            
 
-            this.GenerateGraph();
+            if (checkBox1.Checked) this.GenerateGraph(); //refresh graph only in case live mode is enabled
 
             log.Info("numero device trovati: " + devices[0].Count());
 
@@ -428,6 +454,22 @@ namespace esp32_indoor_localization
         private void Button4_Click(object sender, EventArgs e)
         {
             timepicker_map.Value = DateTime.UtcNow;
+        }
+
+        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                groupBox_map1.Enabled = false;
+                groupBox_map2.Enabled = false;
+                timer.Enabled = true;
+            }
+            else
+            {
+                groupBox_map1.Enabled = true;
+                groupBox_map2.Enabled = true;
+                timer.Enabled = false;
+            }
         }
     }
 
