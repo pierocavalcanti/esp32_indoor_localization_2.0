@@ -78,18 +78,6 @@ namespace esp32_indoor_localization
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Statistics)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // button1
-            // 
-            button1.Location = new System.Drawing.Point(15, 106);
-            button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            button1.Name = "button1";
-            button1.Size = new System.Drawing.Size(47, 32);
-            button1.TabIndex = 5;
-            button1.Text = "◀";
-            button1.UseVisualStyleBackColor = true;
-            button1.UseWaitCursor = true;
-            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage_mapView);
@@ -101,9 +89,9 @@ namespace esp32_indoor_localization
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(891, 445);
             this.tabControl1.TabIndex = 0;
-            // 
+            //
             // tabPage_mapView
-            // 
+            //
             this.tabPage_mapView.BackColor = System.Drawing.Color.WhiteSmoke;
             this.tabPage_mapView.Controls.Add(this.groupBox2);
             this.tabPage_mapView.Controls.Add(this.groupBox3);
@@ -249,7 +237,7 @@ namespace esp32_indoor_localization
             this.comboBox_TimeUnit.UseWaitCursor = true;
             // 
             // label3
-            // 
+            //
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.GreenYellow;
             this.label3.Location = new System.Drawing.Point(529, 377);
@@ -258,7 +246,7 @@ namespace esp32_indoor_localization
             this.label3.Size = new System.Drawing.Size(35, 13);
             this.label3.TabIndex = 2;
             this.label3.Text = "label3";
-            // 
+            //
             // chart_Map
             // 
             chartArea1.Name = "ChartArea1";
@@ -275,9 +263,10 @@ namespace esp32_indoor_localization
             this.chart_Map.Size = new System.Drawing.Size(519, 374);
             this.chart_Map.TabIndex = 0;
             this.chart_Map.Text = "chart1";
-            // 
+            this.chart_Map.Click += new System.EventHandler(this.Chart_Map_Click);
+            //
             // tabPage_DevicePer5min
-            // 
+            //
             this.tabPage_DevicePer5min.BackColor = System.Drawing.Color.WhiteSmoke;
             this.tabPage_DevicePer5min.Controls.Add(this.label4);
             this.tabPage_DevicePer5min.Controls.Add(this.chart_macOccurenciesPerPeriod);
@@ -286,9 +275,9 @@ namespace esp32_indoor_localization
             this.tabPage_DevicePer5min.Size = new System.Drawing.Size(883, 419);
             this.tabPage_DevicePer5min.TabIndex = 2;
             this.tabPage_DevicePer5min.Text = "Device per min Statistics";
-            // 
+            //
             // label4
-            // 
+            //
             this.label4.AutoSize = true;
             this.label4.BackColor = System.Drawing.Color.Chartreuse;
             this.label4.Location = new System.Drawing.Point(3, 408);
@@ -298,7 +287,7 @@ namespace esp32_indoor_localization
             this.label4.TabIndex = 2;
             this.label4.Text = "label4";
             this.label4.Click += new System.EventHandler(this.Label4_Click);
-            // 
+            //
             // chart_macOccurenciesPerPeriod
             // 
             chartArea2.Name = "ChartArea1";
@@ -314,9 +303,9 @@ namespace esp32_indoor_localization
             this.chart_macOccurenciesPerPeriod.Size = new System.Drawing.Size(703, 374);
             this.chart_macOccurenciesPerPeriod.TabIndex = 1;
             this.chart_macOccurenciesPerPeriod.Text = "chart2";
-            // 
+            //
             // tabPage_LongTermStatistics
-            // 
+            //
             this.tabPage_LongTermStatistics.BackColor = System.Drawing.Color.WhiteSmoke;
             this.tabPage_LongTermStatistics.Controls.Add(this.dataGridView_Statistics);
             this.tabPage_LongTermStatistics.Controls.Add(this.groupBox1);
@@ -341,7 +330,7 @@ namespace esp32_indoor_localization
             this.dataGridView_Statistics.TabIndex = 9;
             // 
             // groupBox1
-            // 
+            //
             this.groupBox1.Controls.Add(this.dateTimePicker1_from);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.button_computeMacPerPeriod);
@@ -355,7 +344,7 @@ namespace esp32_indoor_localization
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "TimePeriod Definition";
-            // 
+            //
             // dateTimePicker1_from
             // 
             this.dateTimePicker1_from.Location = new System.Drawing.Point(23, 39);
@@ -364,9 +353,9 @@ namespace esp32_indoor_localization
             this.dateTimePicker1_from.Size = new System.Drawing.Size(189, 20);
             this.dateTimePicker1_from.TabIndex = 2;
             this.dateTimePicker1_from.Value = new System.DateTime(2019, 7, 14, 19, 59, 17, 538);
-            // 
+            //
             // label1
-            // 
+            //
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(21, 23);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -375,7 +364,7 @@ namespace esp32_indoor_localization
             this.label1.TabIndex = 4;
             this.label1.Text = "From:";
             this.label1.Click += new System.EventHandler(this.Label1_Click);
-            // 
+            //
             // button_computeMacPerPeriod
             // 
             this.button_computeMacPerPeriod.Location = new System.Drawing.Point(39, 123);
@@ -386,9 +375,9 @@ namespace esp32_indoor_localization
             this.button_computeMacPerPeriod.Text = "Compute";
             this.button_computeMacPerPeriod.UseVisualStyleBackColor = true;
             this.button_computeMacPerPeriod.Click += new System.EventHandler(this.Button1_Click_1);
-            // 
+            //
             // label2
-            // 
+            //
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(21, 67);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -396,7 +385,7 @@ namespace esp32_indoor_localization
             this.label2.Size = new System.Drawing.Size(23, 13);
             this.label2.TabIndex = 5;
             this.label2.Text = "To:";
-            // 
+            //
             // dateTimePicker_to
             // 
             this.dateTimePicker_to.Location = new System.Drawing.Point(23, 83);
@@ -407,11 +396,11 @@ namespace esp32_indoor_localization
             this.dateTimePicker_to.Value = new System.DateTime(2019, 7, 14, 19, 59, 17, 540);
             // 
             // timer
-            // 
+            //
             this.timer.Enabled = true;
             this.timer.Interval = 10000;
             this.timer.Tick += new System.EventHandler(this.Timer_Tick);
-            // 
+            //
             // Form_Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);

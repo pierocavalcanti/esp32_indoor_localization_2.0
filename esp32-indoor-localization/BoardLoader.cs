@@ -23,7 +23,7 @@ namespace esp32_indoor_localization
 
         BoardLoader()
         {
-            using (System.IO.StreamReader r = new StreamReader(@"config.json"))
+            using (System.IO.StreamReader r = new StreamReader(@"../../config/config.json"))
             {
                 string json = r.ReadToEnd();
                 log.Info("json letto: " + json);

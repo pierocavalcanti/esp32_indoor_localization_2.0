@@ -29,13 +29,16 @@ namespace esp32_indoor_localization
          List<DevicePosition> devices;
          PositionHandler positionHandler;
 
-        private static string IP_ADDRESS_SERVER = "http://192.168.1.16:3000/";
+
+
+        private const string IP_ADDRESS_SERVER = "http://192.168.1.16:3000/";
+       
         public Form_Home()
         {
             //Inizializza form
             InitializeComponent();
             //Crea un nuovo Thread separato per il server (while true loop che genera un Thread ad ogni richiesta)
-            
+
             t = new System.Windows.Forms.Timer();
 
 
@@ -63,7 +66,7 @@ namespace esp32_indoor_localization
             // Display the form as a modal dialog box.
             this.ShowDialog();
         }
-            
+
         public void AsyncServer()
         {
             //Server HTTP asincrono
@@ -191,7 +194,7 @@ namespace esp32_indoor_localization
                 if (o.x >= maxX) maxX = o.x;
                 if (o.y >= maxY) maxY = o.y;
             });
-            
+
             chart_Map.Series.Clear();
             var ss = new Series();
             //ss.Name = label8.Text;
@@ -227,7 +230,7 @@ namespace esp32_indoor_localization
             this.chart_Map.Series.Add(ss);
             this.chart_Map.Series[ss.Name].IsValueShownAsLabel = true;
 
-            
+
             boards.ForEach(o =>
             {
                 Debug.WriteLine("Device: " + o.id + " trovato");
@@ -250,6 +253,8 @@ namespace esp32_indoor_localization
                     ss.Points.Add(dp1);
                 });
             }
+
+            
 
             chart_Map.Invalidate();
 
@@ -292,12 +297,12 @@ namespace esp32_indoor_localization
 
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private async void Timer_Tick(object sender, EventArgs e)
         {
             //Funzione che richiama in ordine:
             //  GetPosition() restituisce la List di DevicePosition aggiornata
 
-            
+
             //Int32 currentDate = (Int32) new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
             Int32 unixTimeStamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             Int32 timestamp_from = unixTimeStamp - 60;
@@ -305,19 +310,18 @@ namespace esp32_indoor_localization
             label3.Text = "Ultimo aggiornamento " + current_hdate.ToString();
             label4.Text = "Ultimo aggiornamento " + current_hdate.ToString();
             //Debug.WriteLine(this.getTrackBarValue().ToString() + "           " + unixTimestamp);
-
-
-            //decommentare
-            //devices = positionHandler.GetPositions(timestamp_from,0.30).Result; //bloccante
-
-
-
+            
+            var devices = positionHandler.GetPositions(timestamp_from,0.30).Result; //devices è un array di List -> 1 elemento: standard - 2 elemento: hidden
+            
+            //devices = positionHandler.EstimateNotHiddenPositions(timestamp_from);
+            //  GenerateGraph() disegna il chart della mappa con i dispositivi
             Debug.WriteLine("boooooboboooobo");
             //  PlotGraph() plotta i devices sulla mappa
+            
 
             this.GenerateGraph();
 
-            //log.Info("numero device trovati: " + devices.Count);
+            log.Info("numero device trovati: " + devices[0].Count());
 
         }
 
@@ -325,7 +329,7 @@ namespace esp32_indoor_localization
         //{
         //    //Funzione che richiama in ordine:
         //    //  GetPosition() restituisce la List di DevicePosition aggiornata
-            
+
         //    Int32 timestamp_from = this.getTrackBarValue() * 60;
         //    //Int32 currentDate = (Int32) new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
         //    Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
