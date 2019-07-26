@@ -29,7 +29,7 @@ namespace esp32_indoor_localization
          List<DevicePosition> devices;
          PositionHandler positionHandler;
          Series ss_occurrencies;
-
+        DateTime startUpDateTime; //momento di apertura del programma per StatsChart
 
 
         private const string IP_ADDRESS_SERVER = "http://192.168.1.16:3000/";
@@ -50,22 +50,8 @@ namespace esp32_indoor_localization
             fixSize();
 
 
-
-            //Fillup OccurrenciesChart
-
-            ss_occurrencies = new Series();
-            ss_occurrencies.ChartArea = "ChartArea1";
-            ss_occurrencies.ChartType = SeriesChartType.Area;
-            chart_macOccurenciesPerPeriod.Legends.Clear();
-            ss_occurrencies.XValueType = ChartValueType.Int32;
-            ss_occurrencies.YValueType = ChartValueType.Int32;
-            chart_macOccurenciesPerPeriod.ChartAreas[0].BackColor = Color.WhiteSmoke;
-            ss_occurrencies.Points.AddXY(0, 0);
-            ss_occurrencies.Points.AddXY(1, 1);
-            ss_occurrencies.Points.AddXY(2, 2);
-            chart_macOccurenciesPerPeriod.Series.Add(ss_occurrencies);
-            chart_macOccurenciesPerPeriod.Invalidate();
-            //
+            startUpDateTime = DateTime.Now;
+            
 
         }
 
@@ -144,6 +130,30 @@ namespace esp32_indoor_localization
 
         }
 
+        private void InitializeStatsChart() {
+            //Fillup OccurrenciesChart
+
+            ss_occurrencies = new Series();
+            chart_macOccurenciesPerPeriod.Series.Add(ss_occurrencies);
+            ss_occurrencies.ChartArea = "ChartArea1";
+            ss_occurrencies.ChartType = SeriesChartType.Area;
+
+            ss_occurrencies.XValueType = ChartValueType.DateTime;
+            ss_occurrencies.YValueType = ChartValueType.Int32;
+
+            chart_macOccurenciesPerPeriod.ChartAreas[0].AxisY.Minimum = 0;
+            chart_macOccurenciesPerPeriod.ChartAreas[0].AxisY.Maximum = 100;
+
+            chart_macOccurenciesPerPeriod.Legends.Clear();
+            chart_macOccurenciesPerPeriod.ChartAreas[0].BackColor = Color.WhiteSmoke;
+            ss_occurrencies.Points.AddXY(DateTime.Now, 1);
+            var end_of_day = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
+            ss_occurrencies.Points.AddXY(end_of_day, 1);
+            chart_macOccurenciesPerPeriod.Invalidate();
+
+            //
+        }
+
         private void Button1_Click_1(object sender, EventArgs e)
         {
             //When click on this button, Compute the LongTermStatistics
@@ -189,6 +199,7 @@ namespace esp32_indoor_localization
 
         private void Form_Home_Load(object sender, EventArgs e)
         {
+            InitializeStatsChart();
             GenerateGraph();
 
             // COMMENTARE BLOCCO QUANDO NON CONNESSO!!
@@ -273,13 +284,13 @@ namespace esp32_indoor_localization
                     occurrencies++;
                 });
             }
+            Debug.WriteLine("occurrencies = " + occurrencies.ToString());
 
-            if (occurrencies != 0)
-            {
-                DataPoint dp1 = new DataPoint();
-                dp1.SetValueXY(chart_macOccurenciesPerPeriod.Series[ss_occurrencies.Name].Points.Count()+1, occurrencies);
-                ss_occurrencies.Points.Add(dp1);
-            }
+            //Add to chart_macOccurenciesPerPeriod the points representing the number of elements 
+            DataPoint dp2 = new DataPoint();
+            dp2.SetValueXY(chart_macOccurenciesPerPeriod.Series[ss_occurrencies.Name].Points.Count()+1, occurrencies);
+            ss_occurrencies.Points.Add(dp2);
+            
 
             chart_Map.Invalidate();
             chart_macOccurenciesPerPeriod.Invalidate();
