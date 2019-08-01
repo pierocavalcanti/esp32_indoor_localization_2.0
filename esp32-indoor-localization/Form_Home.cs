@@ -28,6 +28,7 @@ namespace esp32_indoor_localization
 
         //FOR DEBUG, SET TRUE IF CONNECTION IS ON!
         const bool connectionIsPossible = false;
+        private const string IP_ADDRESS_SERVER = "http://192.168.1.16:3000/";
 
 
         private static readonly ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -35,16 +36,14 @@ namespace esp32_indoor_localization
         List<BoardLoader.Board> boards;
         List<DevicePosition> devices;
         PositionHandler positionHandler;
-        Series ss_occurrencies;
         static DateTime startUpDateTime = DateTime.Now; //momento di apertura del programma per StatsChart
-        
-        
+
+
         //VISUALIZED INTERVAL INDICA IL MINUTO CHE è VISUALIZZATO NELLA MAPPA
         MinuteInterval visualizedInterval = new MinuteInterval(DateTime.Now);
 
         //PER STATS VISUALIZATION:
         List<int> counts_stats = new List<int>();
-
 
         class MinuteInterval
         {
@@ -89,9 +88,6 @@ namespace esp32_indoor_localization
             }
         }
 
-
-        private const string IP_ADDRESS_SERVER = "http://192.168.1.16:3000/";
-
         public Form_Home()
         {
             //Inizializza form
@@ -110,6 +106,7 @@ namespace esp32_indoor_localization
             //visualizedInterval = new MinuteInterval(DateTime.Now);
 
             counts_stats = new List<int>();
+
         }
 
         public void fixSize()
@@ -183,41 +180,10 @@ namespace esp32_indoor_localization
             }
         }
 
-        private void Button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void InitializeStatsChart()
-        {
-            //Fillup OccurrenciesChart
-
-            ss_occurrencies = new Series();
-            chart_macOccurenciesPerPeriod.Series.Add(ss_occurrencies);
-            ss_occurrencies.ChartArea = "ChartArea1";
-            ss_occurrencies.ChartType = SeriesChartType.Area;
-
-            ss_occurrencies.XValueType = ChartValueType.Int32;
-            ss_occurrencies.YValueType = ChartValueType.Int32;
-
-            chart_macOccurenciesPerPeriod.ChartAreas["ChartArea1"].AxisY.Minimum = 0;
-            chart_macOccurenciesPerPeriod.ChartAreas["ChartArea1"].AxisY.Maximum = 100;
-
-            chart_macOccurenciesPerPeriod.ChartAreas["ChartArea1"].AxisX.Minimum = 0;
-
-            chart_macOccurenciesPerPeriod.Legends.Clear();
-            chart_macOccurenciesPerPeriod.ChartAreas[0].BackColor = Color.WhiteSmoke;
-            ss_occurrencies.Points.AddXY(DateTime.Now, 1);
-            var end_of_day = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
-            ss_occurrencies.Points.AddXY(end_of_day, 1);
-            chart_macOccurenciesPerPeriod.Invalidate();
-
-            //
-        }
-
         private void Button1_Click_1(object sender, EventArgs e)
         {
-            //When click on this button, Compute the LongTermStatistics
+            //Click on button_computeLongTermStats
+            //When click on this button, Compute the LongTermStats 
             DateTime from = dateTimePicker1_from.Value;
             DateTime to = dateTimePicker_to.Value;
 
@@ -228,7 +194,7 @@ namespace esp32_indoor_localization
 
 
 
-
+            //inizializza la tabella
             var dt = new DataTable();
             dt.Columns.Add("Mac");
             dt.Columns.Add("Occurrencies");
@@ -244,24 +210,12 @@ namespace esp32_indoor_localization
             }
 
             dataGridView_Statistics.DataSource = dt;
-
-
-
-
-
-            //conversion in UnixTimeStamp 
-
-
         }
 
-        private void Label1_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void Form_Home_Load(object sender, EventArgs e)
         {
-            InitializeStatsChart();
+            // InitializeStatsChart();
             GenerateGraph();
 
             if (connectionIsPossible)
@@ -331,51 +285,32 @@ namespace esp32_indoor_localization
                 dp1.Label = "ESP32 " + o.id;
                 ss.Points.Add(dp1);
             });
-            
-
             chart_Map.Invalidate();
-            
-
-
         }
 
         public void RefreshMacPeriodsGraph() {
 
+            chart_macOccurenciesPerPeriod.Series["Series1"].ChartArea = "ChartArea1";
+            chart_macOccurenciesPerPeriod.Series["Series1"].XValueType = ChartValueType.Int32;
+            chart_macOccurenciesPerPeriod.Series["Series1"].YValueType = ChartValueType.Int32;
+            chart_macOccurenciesPerPeriod.ChartAreas["ChartArea1"].AxisY.Minimum = 0;
+            chart_macOccurenciesPerPeriod.ChartAreas["ChartArea1"].AxisY.Maximum = 100;
+            chart_macOccurenciesPerPeriod.ChartAreas["ChartArea1"].AxisX.Minimum = 0;
+            chart_macOccurenciesPerPeriod.Legends.Clear();
+            chart_macOccurenciesPerPeriod.ChartAreas["ChartArea1"].BackColor = Color.WhiteSmoke;
+            chart_macOccurenciesPerPeriod.Series["Series1"].Color = Color.DarkRed;
+
             statsBeginningLabel.Text = "Started at:" + startUpDateTime.ToString();
 
-            var ss = new Series();
-            int occurrencies = 0;
 
-            if (devices != null)
+            chart_macOccurenciesPerPeriod.Series["Series1"].Points.Clear();
+
+            //DataPoint dp2 = new DataPoint();
+            //riempimento del grafico
+            foreach (int counts_stat in counts_stats)
             {
-                devices.ForEach(o =>
-                {
-
-                    DataPoint dp1 = new DataPoint();
-                    dp1.SetValueXY(o.X, o.Y);
-                    dp1.Font = new Font("Arial", 10, FontStyle.Bold);
-                    dp1.Label = o.Mac;
-                    ss.Points.Add(dp1);
-                    occurrencies++;
-                });
-            }
-
-            //Istruzioni per RefreshMacPeriodsGraph
-            counts_stats.Add(occurrencies);
-
-            //Add to chart_macOccurenciesPerPeriod the points representing the number of elements
-            chart_macOccurenciesPerPeriod.Series[ss_occurrencies.Name].Points.Clear();
-
-            DataPoint dp2 = new DataPoint();
-
-            for (
-                //int i = (counts_stats.Count > 10) ? i = (counts_stats.Count - 10) : i = 0;
-                int i =0;
-                i < counts_stats.Count;
-                i++)
-            {
-            dp2.SetValueXY(i, counts_stats[i]);
-            ss_occurrencies.Points.Add(dp2);
+                //dp2.SetValueXY(i, counts_stats[i]);
+                chart_macOccurenciesPerPeriod.Series["Series1"].Points.AddY(counts_stat);
             }
 
             label4.Text = "Ultimo aggiornamento " + DateTime.Now.ToString();
@@ -516,7 +451,8 @@ namespace esp32_indoor_localization
             
             // FUNZIONE CHE INNESTA QUERY + AGGIORNAMENTO_GUI.
             //Parametri:
-            //+++   graphHasToBeRefreshed = true se deve aggiornare la gui, false se invece deve solo effettuare la query (per il timer_tick quando non si è in live_mode)
+            //  graphHasToBeRefreshed, = true se deve aggiornare la gui, false se invece deve solo effettuare la query (per il timer_tick quando non si è in live_mode)
+            //  statsHasToBeRefreshed, = true se devi aggiornare le statistiche di lungo periodo (finestra 2), false altrimenti 
 
             //aggiorno le label dell'ultimo aggiornamento
             label3.Text = "Ultimo aggiornamento " + DateTime.Now.ToString();
@@ -527,18 +463,23 @@ namespace esp32_indoor_localization
             //DEBUG -> fai la query solo se ConnectionisPossible
             if (connectionIsPossible)
                 devices = positionHandler.GetPositions((Int32)visualizedInterval.getFromUnixTimestamp(), 0.30).Result; //devices è un array di List -> 1 elemento: standard - 2 elemento: hidden
+                //devices = positionHandler.EstimateNotHiddenPositions(timestamp_from);
             else
                 devices = new List<DevicePosition>[1]; //FOR DEBUG
 
-            //devices = positionHandler.EstimateNotHiddenPositions(timestamp_from);
-            //  GenerateGraph() disegna il chart della mappa con i dispositivi
-            //  PlotGraph() plotta i devices sulla mappa
+            int occurrencies = devices.Count(); //Conteggio dei dispositivi per la statistica
 
+
+            if (statsHasToBeRefreshed)
+            {
+                //counts_stats.Add(occurrencies); //nel caso in cui il grafico vada aggiornato, prendi anche il conteggio
+                Random random = new Random();
+                counts_stats.Add(random.Next(100));
+            }
             if (grafHasToBeRefreshed) this.GenerateGraph(); //refresh graph only in case live mode is enabled
-            if (statsHasToBeRefreshed) this.RefreshMacPeriodsGraph();
+            if (statsHasToBeRefreshed) this.RefreshMacPeriodsGraph(); //refresh del grafico in tabella due solo se la chiamata è relativa al timertick
 
-
-            if(!(devices[0] is null))
+            if (!(devices[0] is null))
             {
                 log.Info("numero device trovati: " + devices[0].Count());
             }
