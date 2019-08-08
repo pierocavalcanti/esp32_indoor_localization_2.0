@@ -5,6 +5,6 @@ PROJECT SPECIFICATION: https://github.com/BreakSecurity/esp32-indoor-localizatio
 
 DA FARE:
 
-- Agganciare query per LongPeriodStats 
-- Visualizzare hidden 
+- Agganciare query per LongPeriodStats (terza finestra)
+- Visualizzare hidden in qualche modo (basta anche ritornarli tutti nei devices trovati) 
 - Frecce verso i punti ?
