@@ -501,6 +501,16 @@ namespace esp32_indoor_localization
         {
 
         }
+
+        private void Button_ltstats_from_now_Click(object sender, EventArgs e)
+        {
+            dateTimePicker1_from.Value = DateTime.Now;
+        }
+
+        private void Button_ltstats_to_now_Click(object sender, EventArgs e)
+        {
+            dateTimePicker_to.Value = DateTime.Now;
+        }
     }
 }
 
