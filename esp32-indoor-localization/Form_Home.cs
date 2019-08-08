@@ -190,6 +190,11 @@ namespace esp32_indoor_localization
             double from_timestamp = DateTimeToUnixTimestamp(from);
             double to_timestamp = DateTimeToUnixTimestamp(to);
 
+            if (!(from_timestamp < to_timestamp))
+            {
+                MessageBox.Show("'From' date is larger than 'To' date. Retry.", "Uncorrect dates");
+                return;
+            }
             ///////QUERY che ritorna una lista di item: [mac,#occorrenze,prima_volta,ultima_volta]
 
 
