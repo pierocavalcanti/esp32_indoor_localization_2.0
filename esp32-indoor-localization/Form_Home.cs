@@ -69,7 +69,7 @@ namespace esp32_indoor_localization
             public void add(Int64 val) {
                // Debug.WriteLine("ADD -> "+val);
                 from = from.AddSeconds(val);
-                to = to.AddSeconds(val + 60);
+                to = to.AddSeconds(val);
             }
 
             public void subtract(Int64 val)
@@ -77,7 +77,7 @@ namespace esp32_indoor_localization
                // Debug.WriteLine("SUBTRACT -> " + val);
                 val = -val;
                 from = from.AddSeconds(val);
-                to = to.AddSeconds(val + 60);
+                to = to.AddSeconds(val);
             }
 
             public override bool Equals(object obj)
@@ -485,7 +485,7 @@ namespace esp32_indoor_localization
             }
 
             if (!(checkBox1.Checked)) {
-                textBox_currentMoment.Text = visualizedInterval.from.ToString();
+                textBox_currentMoment.Text = visualizedInterval.from.ToString() +" -> "+visualizedInterval.to.TimeOfDay.ToString().Split('.')[0];
             }
         }
 

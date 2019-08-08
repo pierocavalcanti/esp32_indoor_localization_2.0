@@ -148,7 +148,7 @@ namespace esp32_indoor_localization
             // 
             // timepicker_map
             // 
-            this.timepicker_map.CustomFormat = "dd/MM/yyyy hh:mm tt";
+            this.timepicker_map.CustomFormat = "dd/MM/yyyy HH:mm";
             this.timepicker_map.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.timepicker_map.Location = new System.Drawing.Point(20, 57);
             this.timepicker_map.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
@@ -381,7 +381,7 @@ namespace esp32_indoor_localization
             // 
             // dateTimePicker1_from
             // 
-            this.dateTimePicker1_from.CustomFormat = "MM/dd/yyyy hh:mm:ss";
+            this.dateTimePicker1_from.CustomFormat = "dd/MM/yyyy HH:mm";
             this.dateTimePicker1_from.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dateTimePicker1_from.Location = new System.Drawing.Point(34, 60);
             this.dateTimePicker1_from.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
@@ -421,7 +421,7 @@ namespace esp32_indoor_localization
             // 
             // dateTimePicker_to
             // 
-            this.dateTimePicker_to.CustomFormat = "MM/dd/yyyy hh:mm:ss";
+            this.dateTimePicker_to.CustomFormat = "dd/MM/yyyy HH:mm";
             this.dateTimePicker_to.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dateTimePicker_to.Location = new System.Drawing.Point(34, 128);
             this.dateTimePicker_to.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
