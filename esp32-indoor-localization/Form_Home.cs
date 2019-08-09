@@ -231,13 +231,30 @@ namespace esp32_indoor_localization
             dt.Columns.Add("FirstlySeen");
             dt.Columns.Add("LastlySeen");
 
-            //foreach(element in lista_ritornata_da_query)
-            for (int i = 0; i < 10; i++)
+            if (connectionIsPossible)
             {
-                dt.Rows.Add("MAC1", "22", from.ToString(), to.ToString());
-                dt.Rows.Add("MAC2", "24", "primavolta2", "secondavolta2");
+                var deviceStats = DeviceStatistics.CountDevice(Convert.ToInt32(from_timestamp), Convert.ToInt32(to_timestamp));
+                foreach (var devStat in deviceStats)
+                {
+                    string mac_ds = devStat.Mac;
+                    string occurrencies_ds = " "+devStat.Counter;
+                    string ts_start_ds = UnixTimeStampToDateTime(devStat.Timestamp_start).ToString();
+                    string ts_end_ds = UnixTimeStampToDateTime(devStat.Timestamp_end).ToString();
+                    //aggiungi una riga alla tabella:
+                    dt.Rows.Add(mac_ds, occurrencies_ds, ts_start_ds, ts_end_ds);
 
+                }
+            } 
+            else
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    //questa parte è solo per debug, si può sostituire con il foreach che aggiunge una Row per ogni elemento
+                    dt.Rows.Add("MAC1", "22", from.ToString(), to.ToString());
+                    dt.Rows.Add("MAC2", "24", "primavolta2", "secondavolta2");
+                }
             }
+
 
             dataGridView_Statistics.DataSource = dt;
         }
@@ -476,10 +493,10 @@ namespace esp32_indoor_localization
 
         public void LaunchMapRefresh(bool grafHasToBeRefreshed, bool statsHasToBeRefreshed) {
             
-            // FUNZIONE CHE INNESTA QUERY + AGGIORNAMENTO_GUI.
+            // FUNZIONE PRINCIPALE CHE INNESTA QUERY + AGGIORNAMENTO_GUI.
             //Parametri:
             //  graphHasToBeRefreshed, = true se deve aggiornare la gui, false se invece deve solo effettuare la query (per il timer_tick quando non si è in live_mode)
-            //  statsHasToBeRefreshed, = true se devi aggiornare le statistiche di lungo periodo (finestra 2), false altrimenti 
+            //  statsHasToBeRefreshed, = true se devi aggiornare anche le statistiche di lungo periodo (finestra 2), false altrimenti 
 
             //aggiorno le label dell'ultimo aggiornamento
             label3.Text = "Ultimo aggiornamento " + DateTime.Now.ToString();
@@ -499,9 +516,12 @@ namespace esp32_indoor_localization
 
             if (statsHasToBeRefreshed)
             {
-                //counts_stats.Add(occurrencies); //nel caso in cui il grafico vada aggiornato, prendi anche il conteggio
-                Random random = new Random();
-                counts_stats.Add(random.Next(100));
+                if (connectionIsPossible) counts_stats.Add(occurrencies); //nel caso in cui il grafico vada aggiornato, prendi anche il conteggio
+                else
+                {
+                    Random random = new Random();
+                    counts_stats.Add(random.Next(100));
+                }
             }
             if (grafHasToBeRefreshed) this.GenerateGraph(); //refresh graph only in case live mode is enabled
             if (statsHasToBeRefreshed) this.RefreshMacPeriodsGraph(); //refresh del grafico in tabella due solo se la chiamata è relativa al timertick
