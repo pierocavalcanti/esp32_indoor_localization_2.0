@@ -8,3 +8,6 @@ DA FARE:
 - Agganciare query per LongPeriodStats (terza finestra)
 - Visualizzare hidden in qualche modo (basta anche ritornarli tutti nei devices trovati) 
 - Frecce verso i punti ?
+
+PSW = 'vaccarino' 
+per cambiarla basta cambiare il valore di std_password con uno generato da https://www.xorbin.com/tools/sha256-hash-calculator
