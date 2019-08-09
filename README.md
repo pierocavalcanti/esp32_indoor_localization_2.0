@@ -8,3 +8,5 @@ DA FARE:
 - Agganciare query per LongPeriodStats (terza finestra)
 - Visualizzare hidden in qualche modo (basta anche ritornarli tutti nei devices trovati) 
 - Frecce verso i punti ?
+
+PSW = 'vaccarino' 
