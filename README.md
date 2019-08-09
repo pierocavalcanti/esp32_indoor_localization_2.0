@@ -10,3 +10,4 @@ DA FARE:
 - Frecce verso i punti ?
 
 PSW = 'vaccarino' 
+per cambiarla basta cambiare il valore di std_password con uno generato da https://www.xorbin.com/tools/sha256-hash-calculator
