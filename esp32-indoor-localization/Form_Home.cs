@@ -17,6 +17,9 @@ using System.Diagnostics;
 using System.Windows.Forms.DataVisualization.Charting;
 using log4net;
 using System.Reflection;
+using System.Security;
+using System.Security.Cryptography;
+
 //using NLog;
 
 
@@ -26,8 +29,8 @@ namespace esp32_indoor_localization
     public partial class Form_Home : Form
     {
 
-        //FOR DEBUG, SET TRUE IF CONNECTION IS ON!
-        const bool connectionIsPossible = false;
+        
+        const bool connectionIsPossible = false; //FOR DEBUG, SET TRUE IF CONNECTION IS ON!
         private const string IP_ADDRESS_SERVER = "http://192.168.1.16:3000/";
 
 
@@ -37,18 +40,20 @@ namespace esp32_indoor_localization
         List<DevicePosition> devices;
         PositionHandler positionHandler;
         static DateTime startUpDateTime = DateTime.Now; //momento di apertura del programma per StatsChart
-
+        private string std_password = "923d0f5c9146b3391c711c052af598c4b7a1d3daa6d4ec6d41ffcc22d9ddf32d";
 
         //VISUALIZED INTERVAL INDICA IL MINUTO CHE è VISUALIZZATO NELLA MAPPA
         MinuteInterval visualizedInterval = new MinuteInterval(DateTime.Now);
 
-        //PER STATS VISUALIZATION:
+        //PER CONTEGGIO DISPOSITIVI OGNI MINUTO:
         List<int> counts_stats = new List<int>();
 
         class MinuteInterval
         {
-            // Classe che descrive un minuto, in modo da poter usare la classe per gestire la visualizzazione del grafo
-            // con from e to accedi 
+            // Classe che descrive un minuto, in modo da poter usare la classe per gestire l'intervallo visualizzato nella mappa
+            // con le proprietà from e to accedi ai margini dell'intervallo
+            // con add e subtract aggiungi il quantitativo di secondi, traslando l'intero intervallo
+            // è possibile ottenere i due valore from e to in formato UnixTimeStamp
             public DateTime from { get; set; }
             public DateTime to { get; set; }
 
@@ -101,6 +106,9 @@ namespace esp32_indoor_localization
             boards = BoardLoader.Instance.Boards;
 
             positionHandler = new PositionHandler();
+
+            RequireCredential();
+            
             fixSize();
 
             //visualizedInterval = new MinuteInterval(DateTime.Now);
@@ -109,8 +117,25 @@ namespace esp32_indoor_localization
 
         }
 
+        public void RequireCredential()
+        {
+            PasswordForm frm = new PasswordForm();
+            string psw_inserita = frm.Show("Enter Password:", "Password"); //password ritornata dal form
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                if (!(VerifyHash(sha256Hash, psw_inserita,std_password)))
+                {
+                    this.Close();
+                }
+            }
+
+
+        }
+
         public void fixSize()
         {
+            //funzione per definire una dimensione fissa della finestra
+            
             // Define the border style of the form to a dialog box.
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
 
@@ -220,8 +245,6 @@ namespace esp32_indoor_localization
 
         private void Form_Home_Load(object sender, EventArgs e)
         {
-            // InitializeStatsChart();
-            GenerateGraph();
 
             if (connectionIsPossible)
             {
@@ -230,8 +253,7 @@ namespace esp32_indoor_localization
 
                 Debug.WriteLine(server.IsAlive);
             }
-
-            //t.Start();
+            GenerateGraph();
         }
 
 
@@ -516,6 +538,47 @@ namespace esp32_indoor_localization
         {
             dateTimePicker_to.Value = DateTime.Now;
         }
+        
+        
+        
+        
+        //////////----------- HASH FUNCTIONS ------------///////////
+        private static string GetHash(HashAlgorithm hashAlgorithm, string input)
+        {
+
+            // Convert the input string to a byte array and compute the hash.
+            byte[] data = hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(input));
+
+            // Create a new Stringbuilder to collect the bytes
+            // and create a string.
+            var sBuilder = new StringBuilder();
+
+            // Loop through each byte of the hashed data 
+            // and format each one as a hexadecimal string.
+            for (int i = 0; i < data.Length; i++)
+            {
+                sBuilder.Append(data[i].ToString("x2"));
+            }
+
+            // Return the hexadecimal string.
+            return sBuilder.ToString();
+        }
+
+        // Verify a hash against a string.
+        private static bool VerifyHash(HashAlgorithm hashAlgorithm, string input, string hash)
+        {
+            // Hash the input.
+            var hashOfInput = GetHash(hashAlgorithm, input);
+
+            // Create a StringComparer an compare the hashes.
+            StringComparer comparer = StringComparer.OrdinalIgnoreCase;
+
+            return comparer.Compare(hashOfInput, hash) == 0;
+        }
+
+        //////////----------- END HASH FUNCTIONS ------------///////////
+
+        
     }
 }
 
