@@ -30,7 +30,7 @@ namespace esp32_indoor_localization
     {
 
         
-        const bool connectionIsPossible = false; //FOR DEBUG, SET TRUE IF CONNECTION IS ON!
+        const bool connectionIsPossible = true; //FOR DEBUG, SET TRUE IF CONNECTION IS ON!
         private const string IP_ADDRESS_SERVER = "http://192.168.1.16:3000/";
 
 
@@ -502,14 +502,17 @@ namespace esp32_indoor_localization
             label3.Text = "Ultimo aggiornamento " + DateTime.Now.ToString();
 
             //Inizializzo l'oggetto devices. Conterrà i dispositivi trovati nel visualizedInterval.
-            List<DevicePosition>[] devices;
+            List<List<DevicePosition>> devices;
 
             //DEBUG -> fai la query solo se ConnectionisPossible
             if (connectionIsPossible)
-                devices = positionHandler.GetPositions((Int32)visualizedInterval.getFromUnixTimestamp(), 0.30).Result; //devices è un array di List -> 1 elemento: standard - 2 elemento: hidden
-                //devices = positionHandler.EstimateNotHiddenPositions(timestamp_from);
+                devices = positionHandler.GetPositions((Int32)visualizedInterval.getFromUnixTimestamp(), 0.30); //devices è un array di List -> 1 elemento: standard - 2 elemento: hidden
+                                                                                                                //devices = positionHandler.EstimateNotHiddenPositions(timestamp_from);
             else
-                devices = new List<DevicePosition>[1]; //FOR DEBUG
+            {
+                //devices = new List<DevicePosition>[1]; //FOR DEBUG
+            }
+                
 
             int occurrencies = devices.Count(); //Conteggio dei dispositivi per la statistica
 
