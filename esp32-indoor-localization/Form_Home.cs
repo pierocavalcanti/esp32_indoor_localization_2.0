@@ -502,7 +502,7 @@ namespace esp32_indoor_localization
             label3.Text = "Ultimo aggiornamento " + DateTime.Now.ToString();
 
             //Inizializzo l'oggetto devices. Conterrà i dispositivi trovati nel visualizedInterval.
-            List<List<DevicePosition>> devices;
+            List<DevicePosition> devices;
 
             //DEBUG -> fai la query solo se ConnectionisPossible
             if (connectionIsPossible)
@@ -523,7 +523,7 @@ namespace esp32_indoor_localization
             }
                 
 
-            int occurrencies = devices[0].Count() + devices[1].Count(); //Conteggio dei dispositivi per la statistica
+            int occurrencies = devices.Count; //Conteggio dei dispositivi per la statistica
 
 
 
@@ -541,7 +541,7 @@ namespace esp32_indoor_localization
 
             if (!(devices[0] is null))
             {
-                log.Info("numero device trovati: " + devices[0].Count());
+                log.Info("numero device trovati: " + devices.Count());
             }
 
             if (!(checkBox1.Checked)) {

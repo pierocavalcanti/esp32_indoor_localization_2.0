@@ -23,48 +23,34 @@ namespace esp32_indoor_localization
         }
 
         
-        public List<List<DevicePosition>> GetPositions(Int32 timestamp_from, double threshold, bool estimatePositions)
+        public List<DevicePosition> GetPositions(Int32 timestamp_from, double threshold, bool estimatePositions)
         {
-            var results = new List<List<DevicePosition>>();
-            List<DevicePosition> positions = new List<DevicePosition>(); //questa lista conterrà i pacchetti non nascosti
-            List<DevicePosition> hiddenPositions = new List<DevicePosition>(); //questa lista conterrà i pacchetti nascosti
-
+            List<DevicePosition> results = new List<DevicePosition>();
+           
             //se estimatePositions = true allora devo stimare le posizioni altrimenti devo fare una semplice find 
             if (estimatePositions)
             {
-                positions = EstimateNotHiddenPositions(timestamp_from);
-                hiddenPositions = EstimateHiddenPositions(timestamp_from, threshold);
+               //stima + insert 
+               results.AddRange(EstimateNotHiddenPositions(timestamp_from));
+               results.AddRange(EstimateHiddenPositions(timestamp_from, threshold));
 
             }
             else
             {
+                //find delle posizioni rilevata tra timestamp_from e timestamp_from + 60
                 using (var db = new LiteDatabase(@"MyData.db"))
                 {
                     var col = db.GetCollection<DevicePosition>("positions");
                     var oldPositions = col.Find(packet => packet.timestamp >= timestamp_from && packet.timestamp <= timestamp_from + 60);
 
-                    foreach (var pos in oldPositions)
+                    foreach (var position in oldPositions)
                     {
-                        //ciascun oggetto conterrà all'interno del campo mac un identificativo diverso a seconda del tipo di position:
-                        //- hiddenPosition -> "hash_hidden"
-                        //- standard position -> mac
-                        if (pos.Mac.Contains("hidden"))
-                        {
-                            hiddenPositions.Add(pos);
-                        }
-                        else
-                        {
-                            positions.Add(pos);
-
-                        }
+                        results.Add(position);
                     }
 
 
                 }
             }
-
-            results.Add(positions);
-            results.Add(hiddenPositions);
 
             return results;
         }
