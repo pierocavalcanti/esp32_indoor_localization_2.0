@@ -109,7 +109,7 @@ namespace esp32_indoor_localization
 
             RequireCredential();
             
-            fixSize();
+            //fixSize();
 
             //visualizedInterval = new MinuteInterval(DateTime.Now);
 
@@ -329,6 +329,10 @@ namespace esp32_indoor_localization
                 dp1.Label = "ESP32 " + o.id;
                 ss.Points.Add(dp1);
             });
+            
+            
+            
+            
             chart_Map.Invalidate();
         }
 
