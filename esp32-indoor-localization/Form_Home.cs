@@ -364,10 +364,10 @@ namespace esp32_indoor_localization
 
         private async void Timer_Tick(object sender, EventArgs e)
         {
-            if(checkBox1.Checked)
-                visualizedInterval = new MinuteInterval(DateTime.Now);
-            LaunchMapRefresh(checkBox1.Checked, true);
-        }
+           
+            visualizedInterval = new MinuteInterval(DateTime.Now);
+            LaunchMapRefresh(checkBox1.Checked, true, true); //in live mode faccio le stime delle posizioni minuto per minuto, anche se la casella non è spuntata
+        } 
 
         private void Label4_Click(object sender, EventArgs e)
         {
@@ -478,7 +478,7 @@ namespace esp32_indoor_localization
             int unit = GetValueFromTimeUnit();
             Debug.WriteLine("PlusOneUnit-->" + unit);
             visualizedInterval.add(unit);
-            LaunchMapRefresh(true, false);
+            LaunchMapRefresh(true, false, false);
 
         }
 
@@ -487,11 +487,11 @@ namespace esp32_indoor_localization
             // PRENDE IL CURRENT MOMENT, SOTTRAE UN UNITà E LANCIA L'AGGIORNAMENTO DELLA GUI
             int unit = GetValueFromTimeUnit();
             visualizedInterval.subtract(unit);
-            LaunchMapRefresh(true, false);
+            LaunchMapRefresh(true, false, false);
 
         }
 
-        public void LaunchMapRefresh(bool grafHasToBeRefreshed, bool statsHasToBeRefreshed) {
+        public void LaunchMapRefresh(bool grafHasToBeRefreshed, bool statsHasToBeRefreshed, bool estimation) {
             
             // FUNZIONE PRINCIPALE CHE INNESTA QUERY + AGGIORNAMENTO_GUI.
             //Parametri:
@@ -506,15 +506,25 @@ namespace esp32_indoor_localization
 
             //DEBUG -> fai la query solo se ConnectionisPossible
             if (connectionIsPossible)
-                devices = positionHandler.GetPositions((Int32)visualizedInterval.getFromUnixTimestamp(), 0.30); //devices è un array di List -> 1 elemento: standard - 2 elemento: hidden
-                                                                                                                //devices = positionHandler.EstimateNotHiddenPositions(timestamp_from);
-            else
+            {
+                if (estimation == true)
+                {
+                    devices = positionHandler.GetPositions((Int32)new MinuteInterval(DateTime.Now).getFromUnixTimestamp(), 0.30, estimation); //devices è un array di List -> 1 elemento: standard - 2 elemento: hidden
+                                                                                                                                              //devices = positionHandler.EstimateNotHiddenPositions(timestamp_from);
+                }
+                else
+                {
+                    devices = positionHandler.GetPositions((Int32)visualizedInterval.getFromUnixTimestamp(), 0.30, estimation); //devices è un array di List -> 1 elemento: standard - 2 elemento: hidden
+                }
+            }
+             else
             {
                 //devices = new List<DevicePosition>[1]; //FOR DEBUG
             }
                 
 
-            int occurrencies = devices.Count(); //Conteggio dei dispositivi per la statistica
+            int occurrencies = devices[0].Count() + devices[1].Count(); //Conteggio dei dispositivi per la statistica
+
 
 
             if (statsHasToBeRefreshed)
@@ -544,7 +554,7 @@ namespace esp32_indoor_localization
             //COMPUTE BUTTON
             //QUANDO CLICCHI, IL VISUALIZED MINUTE è POSIZIONATO SUL DATETIME SCELTO E VIENE AGGIORNATA LA GUI
             visualizedInterval = new MinuteInterval(timepicker_map.Value);
-            LaunchMapRefresh(true, false);
+            LaunchMapRefresh(true, false, false);
         }
 
         private void Timepicker_map_ValueChanged(object sender, EventArgs e)

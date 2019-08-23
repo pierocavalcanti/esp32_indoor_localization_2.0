@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-
 using System.Threading.Tasks;
 using LiteDB;
 using log4net;
@@ -24,15 +23,48 @@ namespace esp32_indoor_localization
         }
 
         
-        public List<List<DevicePosition>> GetPositions(Int32 timestamp_from, double threshold)
+        public List<List<DevicePosition>> GetPositions(Int32 timestamp_from, double threshold, bool estimatePositions)
         {
-            //eseguo due task: uno per trovare le posizioni standard e l'altro per trovare i mac nascosti
-            List<DevicePosition> mainTask = EstimateNotHiddenPositions(timestamp_from);
-            List<DevicePosition> hiddenTask = EstimateHiddenPositions(timestamp_from, threshold);
-
             var results = new List<List<DevicePosition>>();
-            results.Add(mainTask);
-            results.Add(hiddenTask);
+            List<DevicePosition> positions = new List<DevicePosition>(); //questa lista conterrà i pacchetti non nascosti
+            List<DevicePosition> hiddenPositions = new List<DevicePosition>(); //questa lista conterrà i pacchetti nascosti
+
+            //se estimatePositions = true allora devo stimare le posizioni altrimenti devo fare una semplice find 
+            if (estimatePositions)
+            {
+                positions = EstimateNotHiddenPositions(timestamp_from);
+                hiddenPositions = EstimateHiddenPositions(timestamp_from, threshold);
+
+            }
+            else
+            {
+                using (var db = new LiteDatabase(@"MyData.db"))
+                {
+                    var col = db.GetCollection<DevicePosition>("positions");
+                    var oldPositions = col.Find(packet => packet.timestamp >= timestamp_from && packet.timestamp <= timestamp_from + 60);
+
+                    foreach (var pos in oldPositions)
+                    {
+                        //ciascun oggetto conterrà all'interno del campo mac un identificativo diverso a seconda del tipo di position:
+                        //- hiddenPosition -> "hash_hidden"
+                        //- standard position -> mac
+                        if (pos.Mac.Contains("hidden"))
+                        {
+                            hiddenPositions.Add(pos);
+                        }
+                        else
+                        {
+                            positions.Add(pos);
+
+                        }
+                    }
+
+
+                }
+            }
+
+            results.Add(positions);
+            results.Add(hiddenPositions);
 
             return results;
         }
@@ -222,7 +254,7 @@ namespace esp32_indoor_localization
                 //se ci sono due board allora si calcola uno pseudo centro di massa pesato con le distanze misurate dalle due board
                 foreach (var device in deviceInfo)
                 {
-                    String mac = device.Key.Split('_')[0];
+                    String deviceId = device.Key;
                     
                     Double rssi1 = Double.Parse(device.Value[0].Split('_')[1].Replace(',', '.'));
                     Double R1 = ConvertRSSI(rssi1);
@@ -233,14 +265,14 @@ namespace esp32_indoor_localization
 
                     Int32 timestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 
-                    positions.Add(new DevicePosition(mac, x, y, timestamp));
+                    positions.Add(new DevicePosition(deviceId, x, y, timestamp));
                 }
             }
             else
             {
                 foreach (var device in deviceInfo)
                 {
-                    String mac = device.Key.Split('_')[0];
+                    String deviceId = device.Key;
 
 
                     //log.Info("Sto processando il MAC: " + mac);
@@ -302,7 +334,7 @@ namespace esp32_indoor_localization
                     //log.Info("MAC " + device.Key + " con coordinate (" + x + "," + y + ") aggiunto");
                     Int32 timestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 
-                    positions.Add(new DevicePosition(mac, x, y, timestamp));
+                    positions.Add(new DevicePosition(deviceId, x, y, timestamp));
                 }
             }
 
