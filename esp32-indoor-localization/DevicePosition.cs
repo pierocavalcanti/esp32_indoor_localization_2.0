@@ -15,6 +15,8 @@ namespace esp32_indoor_localization
         public double Y { get; set; }
         public Int32 timestamp { get; set; }
 
+        public DevicePosition() {
+        }
         public DevicePosition(string mac, double x, double y, Int32 timestamp)
         {
             this.Mac = mac;

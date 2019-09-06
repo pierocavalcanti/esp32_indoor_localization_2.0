@@ -1,20 +1,16 @@
-﻿//using log4net;
-using log4net;
+﻿using log4net;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace esp32_indoor_localization
 {
     public sealed class BoardLoader
     {
-
-
         private static readonly ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private List<Board> boards;
         private static readonly object padlock = new object();
@@ -23,14 +19,20 @@ namespace esp32_indoor_localization
 
         BoardLoader()
         {
-            using (System.IO.StreamReader r = new StreamReader(@"../../config/config.json"))
+            try
             {
-                string json = r.ReadToEnd();
-                log.Info("json letto: " + json);
-                log.Info("------------------------------------");
-                Boards = JsonConvert.DeserializeObject<List<Board>>(json);
-                NumberOfBoards = Boards.Count();
-
+                using (System.IO.StreamReader r = new StreamReader(@"config.json"))
+                {
+                    string json = r.ReadToEnd();
+                    log.Info("json letto: " + json);
+                    log.Info("------------------------------------");
+                    Boards = JsonConvert.DeserializeObject<List<Board>>(json);
+                    NumberOfBoards = Boards.Count();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -55,8 +57,6 @@ namespace esp32_indoor_localization
                 return instance;
             }
         }
-
-
 
         public Board GetBoardById(string id)
         {

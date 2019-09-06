@@ -2,6 +2,7 @@
 using log4net;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -21,12 +22,15 @@ namespace esp32_indoor_localization
             using (var db = new LiteDatabase(@"MyData.db"))
             {
 
-                var col = db.GetCollection<Packet>("packets");
+                //var col = db.GetCollection<Packet>("packets");
+                var col = db.GetCollection<DevicePosition>("positions");
 
                 //selezioni i pacchetti appartenenti alla finestra temporale passata per parametro
                 // raggruppo per mac, conto e proietto il timestamp minimo e massimo
-                var countDeviceList = col.Find(packet => packet.mac != "hidden" && packet.timestamp >= start && packet.timestamp <= end)
-                                         .GroupBy(x => new { x.mac }, (key, packet) => new { key = key, Count = packet.Count(), time_start = packet.Min(p => p.timestamp), time_end = packet.Max(p => p.timestamp) }).ToList();
+                //var countDeviceList = col.Find(packet => packet.mac != "hidden" && packet.timestamp >= start && packet.timestamp <= end)
+                 //                        .GroupBy(x => new { x.mac }, (key, packet) => new { key = key, Count = packet.Count(), time_start = packet.Min(p => p.timestamp), time_end = packet.Max(p => p.timestamp) }).ToList();
+                var countDeviceList = col.Find(position => !position.Mac.Contains("hidden") && position.timestamp >= start && position.timestamp <= end)
+                                         .GroupBy(x => new { x.Mac }, (key, position) => new { key = key, Count = position.Count(), time_start = position.Min(p => p.timestamp), time_end = position.Max(p => p.timestamp) }).ToList();
 
 
                 if (countDeviceList.Count != 0)
@@ -36,15 +40,14 @@ namespace esp32_indoor_localization
 
                     foreach (var device in countDeviceList)
                     {
-
-                        devices.Add(new DeviceCount(device.key.mac, device.Count, device.time_start, device.time_end));
+                        devices.Add(new DeviceCount(device.key.Mac, device.Count, device.time_start, device.time_end));
                     }
 
                     return devices;
                 }
                 else
                 {
-                    log.Info("Nessuna rilevazione in questa finestra temporale");
+                    //log.Info("Nessuna rilevazione in questa finestra temporale");
                 }
 
             }

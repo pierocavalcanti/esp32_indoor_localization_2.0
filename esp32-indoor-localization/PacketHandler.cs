@@ -34,7 +34,7 @@ namespace esp32_indoor_localization
                     st.Write(buffer, 0, buffer.Length);
                     response.Close();
 
-                    log.Info("ID: " + id + " assegnato alla board con mac " + packet.mac);
+                    //log.Info("ID: " + id + " assegnato alla board con mac " + packet.mac);
                     break;
 
                 case "time_req":
@@ -46,7 +46,7 @@ namespace esp32_indoor_localization
                     st.Write(buffer, 0, buffer.Length);
                     response.Close();
 
-                    log.Info("ricevuta richiesta per il timestamp " + timestamp);
+                    //log.Info("ricevuta richiesta per il timestamp " + timestamp);
 
                     break;
 
@@ -59,7 +59,7 @@ namespace esp32_indoor_localization
                         var col = db.GetCollection<Packet>("packets");
                         //Inserisco il nuovo documento Packet (l'ID è auto-incrementato)
                         col.Insert(packet);
-                        log.Info("pacchetto ricevuto da "+ packet.boardId +": " + Environment.NewLine + packet.toString());
+                        //log.Info("pacchetto ricevuto da "+ packet.boardId +": " + Environment.NewLine + packet.toString());
                     }
                     response.Close();
 
