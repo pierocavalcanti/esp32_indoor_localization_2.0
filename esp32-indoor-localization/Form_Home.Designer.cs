@@ -497,7 +497,7 @@ namespace esp32_indoor_localization
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(375, 32);
             this.label6.TabIndex = 11;
-            this.label6.Text = "Hidden Error Thresold in cm:";
+            this.label6.Text = "Hidden Error Threshold in cm:";
             // 
             // numericUpDown1
             // 

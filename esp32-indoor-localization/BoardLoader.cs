@@ -32,7 +32,8 @@ namespace esp32_indoor_localization
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("File di configurazione errato: "+ex.Message);
+                Environment.Exit(009);
             }
         }
 

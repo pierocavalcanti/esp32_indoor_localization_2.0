@@ -27,14 +27,18 @@ namespace esp32_indoor_localization
             switch (packet.type)
             {
                 case "id_req":
-                    string id = BoardLoader.Instance.GetBoardByMac(packet.mac).id;
-                    buffer = Encoding.UTF8.GetBytes(id);
-                    response.ContentLength64 = buffer.Length;
-                    st = response.OutputStream;
-                    st.Write(buffer, 0, buffer.Length);
-                    response.Close();
-
-                    //log.Info("ID: " + id + " assegnato alla board con mac " + packet.mac);
+                    var board = BoardLoader.Instance.GetBoardByMac(packet.mac);
+                    if (board != null)
+                    {
+                        string id = board.id;
+                        buffer = Encoding.UTF8.GetBytes(id);
+                        response.ContentLength64 = buffer.Length;
+                        st = response.OutputStream;
+                        st.Write(buffer, 0, buffer.Length);
+                        response.Close();
+                        log.Info("Boards --- ID: " + id + " assegnato alla board con mac " + packet.mac);
+                    }
+                    log.Info("Board trovata");
                     break;
 
                 case "time_req":

@@ -53,18 +53,24 @@ namespace esp32_indoor_localization
                 //estraggo gli hash dei pacchetti validi ovvero faccio il controllo che siano pacchetti del timeslot corretto
                 // che i pacchetti siano stati ricevuti da tutti e tre le schedine (una schedina potrebbe aver catturato lo stesso pacchetto più volte!!)
 
-                var validHashes = col.Find(packet => packet.timestamp >= timestamp_from - 60 && packet.timestamp <= timestamp_from && packet.mac != "hidden")
+                /*var validHashes = col.Find(packet => packet.timestamp >= timestamp_from - 60 && packet.timestamp <= timestamp_from && packet.mac != "hidden")
                                      .GroupBy(x => new { x.mac, x.hash, x.boardId }, (key, packet) => new { key = key, Count = packet.Count() })
                                      .GroupBy(x => new { x.key.hash, x.key.mac }, (key, packet) => new { key = key, Count = packet.Count() })
                                      .Where(grp => grp.Count == BoardLoader.Instance.NumberOfBoards)
-                                     .Select(p => p.key.hash);
+                                     .Select(p => p.key.hash);*/
+
+                var validHashes = col.Find(packet => packet.timestamp >= timestamp_from - 60 && packet.timestamp <= timestamp_from && packet.mac != "hidden")
+                                    .GroupBy(x => new { x.mac, hash_t = x.mac + "_" + x.timestamp.ToString().Substring(0, x.timestamp.ToString().Length - 1), x.boardId }, (key, packet) => new { key = key, Count = packet.Count() })
+                                    .GroupBy(x => new { x.key.hash_t, x.key.mac }, (key, packet) => new { key = key, Count = packet.Count() })
+                                    .Where(grp => grp.Count == BoardLoader.Instance.NumberOfBoards)
+                                    .Select(p => p.key.hash_t);
 
 
                 Debug.WriteLine("Dispositivi Triangolati (query_1):"+validHashes.Count());
 
                 //Non faccio il filter per timestamp incluso nella generazione dell'hash
                 //seleziono MAC,ID,AVGRSSI
-                var deviceInfoList = col.FindAll()
+                /*var deviceInfoList = col.FindAll()
                                         .Where(p => validHashes.Contains(p.hash))
                                         .GroupBy(x => new { x.mac, x.boardId },
                                                      (key, values) => new
@@ -72,9 +78,17 @@ namespace esp32_indoor_localization
                                                          key = key,
                                                          AVGRSSI = values.Average(x => x.rssi)                                                     
 
-                                                     }).ToList();
+                                                     }).ToList();*/
 
-        
+                var deviceInfoList = col.FindAll()
+                                       .Where(p => validHashes.Contains(p.mac + "_" + p.timestamp.ToString().Substring(0, p.timestamp.ToString().Length - 1)))
+                                       .GroupBy(x => new { x.mac, x.boardId },
+                                                    (key, values) => new
+                                                    {
+                                                        key = key,
+                                                        AVGRSSI = values.Average(x => x.rssi)
+
+                                                    }).ToList();
 
                 //Debug.WriteLine("MAC+ID+AVG_RSSI trovati (query_2):"+deviceInfoList.Count());
 
@@ -131,7 +145,6 @@ namespace esp32_indoor_localization
                                      .GroupBy(x => new { x.key.hash, x.key.sequenceNumber }, (key, packet) => new { key = key, Count = packet.Count() })
                                      .Where(grp => grp.Count == BoardLoader.Instance.NumberOfBoards)
                                      .Select(p => p.key.hash);
-           
 
                 // nel groupBy la presenza del mac sarà ininfluente nel raggruppamento ma servirà successivamente per assegnare differenziarli dai pacchetti standard
                 var hiddenDeviceList = col.FindAll()
@@ -143,8 +156,7 @@ namespace esp32_indoor_localization
                                                        AVGRSSI = values.Average(x => x.rssi),
                                                       
                                                    }).ToList();
-             
-
+       
                 Dictionary<string, List<string>> hiddenDeviceInfo = new Dictionary<string, List<string>>();
 
                 foreach (var device in hiddenDeviceList)
@@ -215,10 +227,13 @@ namespace esp32_indoor_localization
 
                     String deviceId = device.Key;
                     
-                    Double rssi1 = Double.Parse(device.Value[0].Split('_')[1].Replace(',', '.'));
+                    
+                    Double rssi1 = Double.Parse(device.Value[0].Split('_')[1].Split(',')[0]);
                     Double R1 = ConvertRSSI(rssi1);
-                    Double rssi2 = Double.Parse(device.Value[1].Split('_')[1].Replace(',', '.'));
+                 
+                    Double rssi2 = Double.Parse(device.Value[1].Split('_')[1].Split(',')[0]);
                     Double R2 = ConvertRSSI(rssi2);
+
                     x = (R2 / (R1 + R2)) * BoardLoader.Instance.GetBoardById(device.Value[0].Split('_')[0]).x + (R1 / (R1 + R2)) * BoardLoader.Instance.GetBoardById(device.Value[1].Split('_')[0]).x;
                     y = (R2 / (R1 + R2)) * BoardLoader.Instance.GetBoardById(device.Value[0].Split('_')[0]).y + (R1 / (R1 + R2)) * BoardLoader.Instance.GetBoardById(device.Value[1].Split('_')[0]).y;
 
