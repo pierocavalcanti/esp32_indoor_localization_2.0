@@ -12,4 +12,6 @@ We developed a framework based on __C# front-end interface__ and __NOSQL databas
 ## Usage
 Download and 
 PSW = 'vaccarino' (compute hash value with : https://www.xorbin.com/tools/sha256-hash-calculator) 
+
+
 /!\ Need of change network configuration to work with. 
